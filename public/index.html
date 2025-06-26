@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>Điều chỉnh ngưỡng nhiệt độ</title>
+  <style>
+    body {
+      font-family: sans-serif;
+      background-color: #eef9f8;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      height: 100vh;
+    }
+    .form-box {
+      background: white;
+      padding: 1rem 2rem;
+      border-radius: 1rem;
+      box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+      text-align: center;
+    }
+    input {
+      margin: 0.5rem;
+      padding: 0.5rem;
+      width: 120px;
+    }
+    button {
+      padding: 0.5rem 1rem;
+      margin-top: 1rem;
+    }
+  </style>
+</head>
+<body>
+  <div class="form-box">
+    <h2>Nhập ngưỡng nhiệt độ</h2>
+    <input type="number" id="tempLow" placeholder="Ngưỡng thấp (°C)" step="0.1">
+    <input type="number" id="tempHigh" placeholder="Ngưỡng cao (°C)" step="0.1"><br>
+    <button onclick="updateThresholds()">Gửi tới ESP32</button>
+  </div>
+
+  <script>
+    async function updateThresholds() {
+      const low = parseFloat(document.getElementById('tempLow').value);
+      const high = parseFloat(document.getElementById('tempHigh').value);
+      if (isNaN(low) || isNaN(high)) {
+        alert('Vui lòng nhập đầy đủ 2 giá trị.');
+        return;
+      }
+      try {
+        const res = await fetch('/api/sensor', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ tempLow: low, tempHigh: high })
+        });
+        const data = await res.json();
+        alert(data.message || 'Gửi thành công');
+      } catch (e) {
+        alert('Lỗi khi gửi dữ liệu');
+      }
+    }
+  </script>
+</body>
+</html>
