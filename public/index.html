@@ -43,10 +43,17 @@
     async function updateThresholds() {
       const low = parseFloat(document.getElementById('tempLow').value);
       const high = parseFloat(document.getElementById('tempHigh').value);
+
       if (isNaN(low) || isNaN(high)) {
         alert('Vui lòng nhập đầy đủ 2 giá trị.');
         return;
       }
+
+      if (low > high) {
+        alert('Ngưỡng thấp phải nhỏ hơn hoặc bằng ngưỡng cao.');
+        return;
+      }
+
       try {
         const res = await fetch('/api/sensor', {
           method: 'POST',
@@ -54,7 +61,7 @@
           body: JSON.stringify({ tempLow: low, tempHigh: high })
         });
         const data = await res.json();
-        alert(data.message || 'Gửi thành công');
+        alert('Ngưỡng nhiệt độ đã được cập nhật');
       } catch (e) {
         alert('Lỗi khi gửi dữ liệu');
       }
