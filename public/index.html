@@ -59,6 +59,19 @@
         alert('Lỗi khi gửi dữ liệu');
       }
     }
+
+    window.onload = async () => {
+      try {
+        const res = await fetch('/api/sensor');
+        const data = await res.json();
+        if (data.thresholds) {
+          document.getElementById('tempLow').value = data.thresholds.tempLow;
+          document.getElementById('tempHigh').value = data.thresholds.tempHigh;
+        }
+      } catch (e) {
+        console.error("Không thể tải giá trị ngưỡng:", e);
+      }
+    };
   </script>
 </body>
 </html>

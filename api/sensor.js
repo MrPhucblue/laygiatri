@@ -1,6 +1,6 @@
 let thresholds = {
-  tempLow: 20,
-  tempHigh: 40
+  tempLow: 9,
+  tempHigh: 10
 };
 
 export default function handler(req, res) {
