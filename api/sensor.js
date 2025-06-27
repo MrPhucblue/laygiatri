@@ -12,12 +12,22 @@ export default function handler(req, res) {
 
   if (req.method === 'POST') {
     const { tempLow, tempHigh } = req.body;
-    if (typeof tempLow === 'number' && typeof tempHigh === 'number') {
-      thresholds.tempLow = tempLow;
-      thresholds.tempHigh = tempHigh;
-      return res.status(200).json({ message: 'Thresholds updated' });
+
+    if (
+      typeof tempLow !== 'number' ||
+      typeof tempHigh !== 'number'
+    ) {
+      return res.status(400).json({ message: 'Dữ liệu không hợp lệ.' });
     }
-    return res.status(400).json({ message: 'Invalid thresholds' });
+
+    if (tempLow > tempHigh) {
+      return res.status(400).json({ message: 'Ngưỡng thấp phải nhỏ hơn hoặc bằng ngưỡng cao.' });
+    }
+
+    thresholds.tempLow = tempLow;
+    thresholds.tempHigh = tempHigh;
+
+    return res.status(200).json({ message: 'Ngưỡng nhiệt độ đã được cập nhật' });
   }
 
   return res.status(200).json({ thresholds });
